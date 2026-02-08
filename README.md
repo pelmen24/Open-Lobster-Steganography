@@ -1,2 +1,2 @@
 # Open-Lobster-Steganography
-![image](https://github.com/pelmen24/Open-Lobster-Steganography/img/Group 1.png)
+[https://github.com/user/repo/assets/...](https://github.com/pelmen24/Open-Lobster-Steganography/blob/main/img/Group%201.png?raw=true)
