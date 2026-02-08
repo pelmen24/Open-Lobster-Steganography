@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦞 OLD/EOLD Web Client</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #7f8c8d;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: monospace;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .result.error {
+            border-left-color: #e74c3c;
+            background: #fee;
+        }
+        
+        .result.success {
+            border-left-color: #2ecc71;
+            background: #efe;
+        }
+        
+        .result-label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+        
+        .result-value {
+            font-family: monospace;
+            word-break: break-all;
+            padding: 10px;
+            background: white;
+            border-radius: 4px;
+        }
+        
+        .info-box {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+        
+        .version-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .version-card {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px solid #ecf0f1;
+        }
+        
+        .version-name {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .version-type {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-bottom: 8px;
+        }
+        
+        .version-desc {
+            font-size: 13px;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🦞 OpenLobsterDictionary(OLD)</h1>
+        <p class="subtitle">Unicode Steganographic Encoding</p>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('encode')">Encode</button>
+            <button class="tab" onclick="switchTab('decode')">Decode</button>
+            <button class="tab" onclick="switchTab('versions')">Versions</button>
+        </div>
+        
+        <!-- Encode Tab -->
+        <div id="encode-tab" class="tab-content active">
+            <div class="info-box">
+                💡 Enter text to encode into lobster steganography. Version 5 (EOLD V4) requires a hex key.
+            </div>
+            
+            <form onsubmit="encodeText(event)">
+                <div class="form-group">
+                    <label for="encode-text">Text to Encode:</label>
+                    <textarea id="encode-text" placeholder="Enter your text here..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="encode-version">Version:</label>
+                    <select id="encode-version" onchange="toggleKeyField('encode')">
+                        <option value="1">V1 - Reference (Debug)</option>
+                        <option value="2" selected>V2 - Steganographic (Ternary)</option>
+                        <option value="3">V3 - Adversarial (Ternary)</option>
+                        <option value="4">V3+ - Binary with Separators</option>
+                        <option value="5">EOLD V4 - Keyed Obfuscation</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="encode-key-group" style="display:none">
+                    <label for="encode-key">Key (hex):</label>
+                    <input type="text" id="encode-key" placeholder="deadbeef">
+                </div>
+                
+                <div class="form-group" id="encode-max-lobsters-group" style="display:none">
+                    <label for="encode-max-lobsters">Max Payload Lobsters (optional):</label>
+                    <input type="number" id="encode-max-lobsters" min="1" placeholder="5">
+                </div>
+                
+                <button type="submit" class="btn">🔒 Encode</button>
+            </form>
+            
+            <div id="encode-result"></div>
+        </div>
+        
+        <!-- Decode Tab -->
+        <div id="decode-tab" class="tab-content">
+            <div class="info-box">
+                💡 Paste encoded lobster text to decode. Use the same version and key as encoding.
+            </div>
+            
+            <form onsubmit="decodeText(event)">
+                <div class="form-group">
+                    <label for="decode-text">Encoded Text:</label>
+                    <textarea id="decode-text" placeholder="Paste lobsters here... 🦞" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="decode-version">Version:</label>
+                    <select id="decode-version" onchange="toggleKeyField('decode')">
+                        <option value="1">V1</option>
+                        <option value="2" selected>V2</option>
+                        <option value="3">V3</option>
+                        <option value="4">V3+</option>
+                        <option value="5">EOLD V4</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="decode-key-group" style="display:none">
+                    <label for="decode-key">Key (hex):</label>
+                    <input type="text" id="decode-key" placeholder="deadbeef">
+                </div>
+                
+                <button type="submit" class="btn">🔓 Decode</button>
+            </form>
+            
+            <div id="decode-result"></div>
+        </div>
+        
+        <!-- Versions Tab -->
+        <div id="versions-tab" class="tab-content">
+            <div class="info-box">
+                📚 Available encoding versions and their characteristics
+            </div>
+            
+            <div class="version-grid" id="versions-list">
+                <div class="version-card">
+                    <div class="version-name">V1 - Reference</div>
+                    <div class="version-type">Ternary | No Stego</div>
+                    <div class="version-desc">Debug version, data visible</div>
+                </div>
+                
+                <div class="version-card">
+                    <div class="version-name">V2 - Steganographic</div>
+                    <div class="version-type">Ternary | Stego</div>
+                    <div class="version-desc">Basic zero-width encoding</div>
+                </div>
+                
+                <div class="version-card">
+                    <div class="version-name">V3 - Adversarial</div>
+                    <div class="version-type">Ternary | Stego + Noise</div>
+                    <div class="version-desc">With adversarial layer</div>
+                </div>
+                
+                <div class="version-card">
+                    <div class="version-name">V3+ - Aggregated</div>
+                    <div class="version-type">Binary | Separators</div>
+                    <div class="version-desc">Multi-word payload support</div>
+                </div>
+                
+                <div class="version-card">
+                    <div class="version-name">EOLD V4 - Keyed</div>
+                    <div class="version-type">Binary | Key Required</div>
+                    <div class="version-desc">XOR key obfuscation</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = 'http://localhost:8080';
+        
+        function switchTab(tab) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(`${tab}-tab`).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        function toggleKeyField(type) {
+            const version = document.getElementById(`${type}-version`).value;
+            const keyGroup = document.getElementById(`${type}-key-group`);
+            const maxLobstersGroup = document.getElementById(`${type}-max-lobsters-group`);
+            
+            // Show key field for V4
+            if (version === '5') {
+                keyGroup.style.display = 'block';
+            } else {
+                keyGroup.style.display = 'none';
+            }
+            
+            // Show max lobsters for V3+
+            if (type === 'encode' && (version === '4' || version === '5')) {
+                if (maxLobstersGroup) maxLobstersGroup.style.display = 'block';
+            } else {
+                if (maxLobstersGroup) maxLobstersGroup.style.display = 'none';
+            }
+        }
+        
+        async function encodeText(event) {
+            event.preventDefault();
+            
+            const text = document.getElementById('encode-text').value;
+            const version = parseInt(document.getElementById('encode-version').value);
+            const key = document.getElementById('encode-key').value;
+            const maxLobsters = document.getElementById('encode-max-lobsters').value;
+            
+            const data = {
+                text,
+                version
+            };
+            
+            if (version === 5 && key) {
+                data.key = key;
+            }
+            
+            if (maxLobsters && (version === 4 || version === 5)) {
+                data.max_payload_lobsters = parseInt(maxLobsters);
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/api/encode`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                displayResult('encode-result', result, 'encode');
+            } catch (error) {
+                displayResult('encode-result', {success: false, error: error.message}, 'encode');
+            }
+        }
+        
+        async function decodeText(event) {
+            event.preventDefault();
+            
+            const encoded = document.getElementById('decode-text').value;
+            const version = parseInt(document.getElementById('decode-version').value);
+            const key = document.getElementById('decode-key').value;
+            
+            const data = {
+                encoded,
+                version
+            };
+            
+            if (version === 5 && key) {
+                data.key = key;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/api/decode`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                displayResult('decode-result', result, 'decode');
+            } catch (error) {
+                displayResult('decode-result', {success: false, error: error.message}, 'decode');
+            }
+        }
+        
+        function displayResult(elementId, result, type) {
+            const container = document.getElementById(elementId);
+            
+            if (result.success) {
+                if (type === 'encode') {
+                    container.innerHTML = `
+                        <div class="result success">
+                            <div class="result-label">✅ Encoded Successfully</div>
+                            <div class="result-value">${result.encoded}</div>
+                            <div style="margin-top:15px; font-size:13px; color:#555;">
+                                📊 Stats: ${result.lobster_count} lobsters | 
+                                ${result.original_length} → ${result.encoded_length} bytes
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <div class="result success">
+                            <div class="result-label">✅ Decoded Successfully</div>
+                            <div class="result-value">${result.text}</div>
+                            <div style="margin-top:15px; font-size:13px; color:#555;">
+                                📊 ${result.lobster_count} lobsters | ${result.decoded_length} bytes
+                            </div>
+                        </div>
+                    `;
+                }
+            } else {
+                container.innerHTML = `
+                    <div class="result error">
+                        <div class="result-label">❌ Error</div>
+                        <div class="result-value">${result.error}</div>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
